@@ -1,0 +1,59 @@
+[
+  {
+    "product": {
+      "price": 37.0,
+      "name": "стиральная машина Zegbee",
+      "weight": 180.0,
+      "extraDetails": {
+        "ifDryer": true
+      }
+    }
+  },
+  {
+    "product": {
+      "price": 15.0,
+      "name": "стиральная машина Zegbee",
+      "weight": 100.0,
+      "extraDetails": {
+        "ifDryer": false
+      }
+    }
+  },
+  {
+    "product": {
+      "price": 7.0,
+      "name": "стиральная машина Anno",
+      "weight": 180.0,
+      "extraDetails": {
+        "ifDryer": false
+      }
+    }
+  },
+  {
+    "product": {
+      "price": 5.0,
+      "name": "чипсы Lays",
+      "weight": 100.0,
+      "extraDetails": {
+        "taste": "crab"
+      }
+    }
+  },
+  {
+    "product": {
+      "price": 5.0,
+      "name": "новый продукт",
+      "weight": 100.0
+    }
+  },
+  {
+    "product": {
+      "price": 3.0,
+      "name": "чипсы Lays",
+      "weight": 80.0,
+      "extraDetails": {
+        "taste": "cheese"
+      }
+    }
+  }
+]
