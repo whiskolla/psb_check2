@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.text.ParseException;
+import java.util.Objects;
 
 public class Order {
     ArrayList<Product> products;
@@ -69,5 +70,19 @@ public class Order {
                 "\nsumWeight: " + sumWeight +
                 "\nsumPrice: " + sumPrice +
                 "\ndelivering: " + delivering;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Order order = (Order) obj;
+        return Double.compare(order.sumWeight, sumWeight) == 0 &&
+                Double.compare(order.sumPrice, sumPrice) == 0 &&
+                Objects.equals(order.products, products) &&
+                Objects.equals(order.delivering, delivering);
     }
 }

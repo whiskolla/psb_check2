@@ -21,4 +21,19 @@ public class Chips extends Product {
     public String getTaste() {
         return taste;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true; // Сравниваем ссылки на один и тот же объект
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false; // Проверяем null и тип объекта
+        }
+        Chips product = (Chips) obj; // Приводим объект к типу Product
+        return Double.compare(product.weight, weight) == 0 &&
+                Double.compare(product.price, price) == 0 &&
+                taste.equals(product.taste) &&
+                name.equals(product.name); // Сравниваем поля
+    }
 }

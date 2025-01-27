@@ -1,10 +1,11 @@
 package psb.testproject.store.handling;
 
-import java.io.File;
+import psb.testproject.store.products.Product;
+
 import java.util.Scanner;
 
 public interface IEditable {
-    void editName(Scanner in);
-    void editPrice(Scanner in);
-    void editWeight(Scanner in);
+    Product editName(Scanner in);
+    Product editPrice(Scanner in);
+    Product editWeight(Scanner in);
 }

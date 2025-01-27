@@ -5,8 +5,7 @@ import psb.testproject.store.products.Product;
 import psb.testproject.store.products.WashingMashine;
 
 enum TypesOfProducts {
-    WASHINGMASHINE(WashingMashine.class),
-    CHIPSES(Chips.class);
+    WASHINGMASHINE(WashingMashine.class), CHIPSES(Chips.class);
 
     TypesOfProducts(Class<? extends Product> Class) {
         this.Claass = Class;

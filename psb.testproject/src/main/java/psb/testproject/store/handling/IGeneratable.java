@@ -1,8 +1,10 @@
 package psb.testproject.store.handling;
 
+import psb.testproject.store.products.Order;
+
 public interface IGeneratable { //генератор заказов
-    void generateOrder(); //случайный
-    void generateOrderBySum(double maxSum, double minSum) throws Exception; //заказ от суммы до суммы
-    void generateOrderBySum(double maxSum); //заказ не больше суммы
-    void generateOrderByCount(int maxCount); // кол-во <= maxSum
+    Order generateOrder(); //случайный
+    Order generateOrderBySum(double maxSum, double minSum) throws Exception; //заказ от суммы до суммы
+    Order generateOrderBySum(double maxSum); //заказ не больше суммы
+    Order generateOrderByCount(int maxCount); // кол-во <= maxSum
 }

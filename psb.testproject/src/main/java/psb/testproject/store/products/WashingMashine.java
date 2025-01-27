@@ -23,4 +23,19 @@ public class WashingMashine extends Product {
     public boolean isIfDryer() {
         return ifDryer;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true; // Сравниваем ссылки на один и тот же объект
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false; // Проверяем null и тип объекта
+        }
+        WashingMashine product = (WashingMashine) obj; // Приводим объект к типу Product
+        return Double.compare(product.weight, weight) == 0 &&
+                Double.compare(product.price, price) == 0 &&
+                Boolean.compare(product.ifDryer, ifDryer) == 0 &&
+                name.equals(product.name); // Сравниваем поля
+    }
 }

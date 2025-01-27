@@ -1,8 +1,8 @@
 [
   {
     "delivering": "2025-01-13",
-    "price": 17.0,
-    "weight": 480.0,
+    "price": 13.0,
+    "weight": 380.0,
     "products": [
       {
         "product": {
@@ -30,17 +30,7 @@
           "name": "стиральная машина Zegbee",
           "weight": 180.0,
           "extraDetails": {
-            "ifDryer": true
-          }
-        }
-      },
-      {
-        "product": {
-          "price": 4.0,
-          "name": "Чипсы Lays",
-          "weight": 100.0,
-          "extraDetails": {
-            "taste": "cheese"
+            "ifDryer": false
           }
         }
       }
@@ -102,8 +92,8 @@
   },
   {
     "delivering": "2025-01-15",
-    "price": 33.0,
-    "weight": 760.0,
+    "price": 19.0,
+    "weight": 560.0,
     "products": [
       {
         "product": {
@@ -137,109 +127,9 @@
       },
       {
         "product": {
-          "price": 13.0,
-          "name": "стиральная машина Anno",
-          "weight": 190.0,
-          "extraDetails": {
-            "ifDryer": true
-          }
-        }
-      },
-      {
-        "product": {
-          "price": 1.0,
-          "name": "стиральная машина Sumsung",
-          "weight": 10.0,
-          "extraDetails": {
-            "ifDryer": true
-          }
-        }
-      },
-      {
-        "product": {
           "price": 7.0,
           "name": "стиральная машина Zegbee",
           "weight": 180.0,
-          "extraDetails": {
-            "ifDryer": true
-          }
-        }
-      }
-    ]
-  },
-  {
-    "delivering": "2025-01-15",
-    "price": 1.0,
-    "weight": 10.0,
-    "products": [
-      {
-        "product": {
-          "price": 1.0,
-          "name": "стиральная машина Sumsung",
-          "weight": 10.0,
-          "extraDetails": {
-            "ifDryer": true
-          }
-        }
-      }
-    ]
-  },
-  {
-    "delivering": "2025-01-15",
-    "price": 1.0,
-    "weight": 10.0,
-    "products": [
-      {
-        "product": {
-          "price": 1.0,
-          "name": "стиральная машина Sumsung",
-          "weight": 10.0,
-          "extraDetails": {
-            "ifDryer": true
-          }
-        }
-      }
-    ]
-  },
-  {
-    "delivering": "2025-01-15",
-    "price": 0.0,
-    "weight": 0.0,
-    "products": []
-  },
-  {
-    "delivering": "2025-01-15",
-    "price": 0.0,
-    "weight": 0.0,
-    "products": []
-  },
-  {
-    "delivering": "2025-01-15",
-    "price": 1.0,
-    "weight": 10.0,
-    "products": [
-      {
-        "product": {
-          "price": 1.0,
-          "name": "стиральная машина Sumsung",
-          "weight": 10.0,
-          "extraDetails": {
-            "ifDryer": true
-          }
-        }
-      }
-    ]
-  },
-  {
-    "delivering": "2025-01-15",
-    "price": 1.0,
-    "weight": 10.0,
-    "products": [
-      {
-        "product": {
-          "price": 1.0,
-          "name": "стиральная машина Sumsung",
-          "weight": 10.0,
           "extraDetails": {
             "ifDryer": true
           }

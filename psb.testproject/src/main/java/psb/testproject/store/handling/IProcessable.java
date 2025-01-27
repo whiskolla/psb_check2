@@ -1,8 +1,13 @@
 package psb.testproject.store.handling;
 
+import psb.testproject.store.products.Order;
+import psb.testproject.store.products.Product;
+
+import java.util.ArrayList;
+
 public interface IProcessable {
     void printOrderWithSumWeightAndPrice();
-    void createOptimOrder();
-    void getMinProductByPrice();
+    Order createOptimOrder();
+    ArrayList<Product> getMinProductByPrice();
     void getOptimOrder();
 }

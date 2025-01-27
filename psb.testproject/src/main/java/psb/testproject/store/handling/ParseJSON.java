@@ -115,7 +115,7 @@ public class ParseJSON {
             }
         } catch (FileNotFoundException e) {
             System.err.println("order: Не удалось найти файл");
-        }  catch (IOException | ParseException e) {
+        } catch (IOException | ParseException e) {
             System.out.println("order:");
             e.printStackTrace();
         }

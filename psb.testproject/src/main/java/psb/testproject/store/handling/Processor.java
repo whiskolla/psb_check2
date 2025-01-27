@@ -18,8 +18,9 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
     ArrayList<WashingMashine> washingMashines = new ArrayList<>();
     ArrayList<Chips> chipses = new ArrayList<>();
     ParseJSON parseJSON = new ParseJSON();
-    String pathProducts = "C:\\Users\\Anastasia\\IdeaProjects\\psb.testproject\\src\\main\\java\\psb\\testproject\\products.json";
-    String pathOrders = "C:\\Users\\Anastasia\\IdeaProjects\\psb.testproject\\src\\main\\java\\psb\\testproject\\orders.json";
+    String pathProducts = "C:\\Users\\Anastasia\\IdeaProjects\\psb_check2\\psb.testproject\\src\\main\\java\\psb\\testproject\\products.json";
+    String pathOrders = "C:\\Users\\Anastasia\\IdeaProjects\\psb_check2\\psb.testproject\\src\\main\\java\\psb\\testproject\\orders.json";
+
     public Processor() {
         allProducts = parseJSON.parseProductsFromJSON(pathProducts);
         orders = parseJSON.parseOrdersFromJSON(pathOrders);
@@ -48,11 +49,13 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
     }
 
     @Override
-    public void createOptimOrder() {
+    public Order createOptimOrder() {
         ArrayList<Product> optimOrder = new ArrayList<>();
         optimOrder.add(getOptimProductByPrice(washingMashines));
         optimOrder.add(getOptimProductByPrice(chipses));
         this.optimOrder = new Order(optimOrder, new Date());
+        logger.logInfo("Заказ сформирован");
+        return this.optimOrder;
     }
 
     @Override
@@ -68,19 +71,18 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
     }
 
     @Override
-    public void getMinProductByPrice() {
-        System.out.println("Минимальныые цены:\n" +
-                "Из Стиральных машин: ");
+    public ArrayList<Product> getMinProductByPrice() {
+        ArrayList<Product> prs = new ArrayList<>();
         Product pr = sortMinPrice(washingMashines);
-        System.out.println(pr.toString());
-        System.out.println("Из чипсов: ");
+        prs.add(pr);
         pr = sortMinPrice(chipses);
-        System.out.println(pr.toString());
+        prs.add(pr);
+        return prs;
     }
 
     //генерирование данных
     @Override
-    public void generateOrder() {
+    public Order generateOrder() {
         generatedOrder.clear();
         int count = (int) (Math.random() * (allProducts.size() - 1 + 1) + 1);
         System.out.println("count: " + count);
@@ -93,11 +95,13 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
             }
         }
         ParseJSON parseJSON = new ParseJSON();
-        parseJSON.addOrderToJson("C:\\Users\\Anastasia\\IdeaProjects\\untitled\\src\\orders.json", new Order(generatedOrder, new Date()));
+        Order newOrder = new Order(generatedOrder, new Date());
+        parseJSON.addOrderToJson("C:\\Users\\Anastasia\\IdeaProjects\\psb_check2\\psb.testproject\\src\\main\\java\\psb\\testproject\\orders.json", newOrder);
+        return newOrder;
     }
 
     @Override
-    public void generateOrderBySum(double maxSum) {
+    public Order generateOrderBySum(double maxSum) {
         generatedOrder.clear();
         double orderSum = 0;
         boolean isAdd = true;
@@ -114,11 +118,13 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
             }
         }
         ParseJSON parseJSON = new ParseJSON();
-        parseJSON.addOrderToJson("C:\\Users\\Anastasia\\IdeaProjects\\untitled\\src\\orders.json", new Order(generatedOrder, new Date()));
+        Order newOrder = new Order(generatedOrder, new Date());
+        parseJSON.addOrderToJson("C:\\Users\\Anastasia\\IdeaProjects\\psb_check2\\psb.testproject\\src\\main\\java\\psb\\testproject\\orders.json", newOrder);
+        return newOrder;
     }
 
     @Override
-    public void generateOrderBySum(double minSum, double maxSum) throws Exception {
+    public Order generateOrderBySum(double minSum, double maxSum) throws Exception {
         if (minSum >= maxSum) {
             throw new Exception("мин сумма больше макс");
         }
@@ -145,11 +151,13 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
         }
         System.out.println("orderSum: " + orderSum);
         ParseJSON parseJSON = new ParseJSON();
-        parseJSON.addOrderToJson("C:\\Users\\Anastasia\\IdeaProjects\\untitled\\src\\orders.json", new Order(generatedOrder, new Date()));
+        Order newOrder = new Order(generatedOrder, new Date());
+        parseJSON.addOrderToJson("C:\\Users\\Anastasia\\IdeaProjects\\psb_check2\\psb.testproject\\src\\main\\java\\psb\\testproject\\orders.json", newOrder);
+        return newOrder;
     }
 
     @Override
-    public void generateOrderByCount(int maxCount) {
+    public Order generateOrderByCount(int maxCount) {
         generatedOrder.clear();
         int count = (int) (Math.random() * (maxCount + 1 - 1) + 1);
         System.out.println("count: " + count);
@@ -162,12 +170,14 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
             }
         }
         ParseJSON parseJSON = new ParseJSON();
-        parseJSON.addOrderToJson("C:\\Users\\Anastasia\\IdeaProjects\\untitled\\src\\orders.json", new Order(generatedOrder, new Date()));
+        Order newOrder = new Order(generatedOrder, new Date());
+        parseJSON.addOrderToJson("C:\\Users\\Anastasia\\IdeaProjects\\psb_check2\\psb.testproject\\src\\main\\java\\psb\\testproject\\orders.json", newOrder);
+        return newOrder;
     }
 
     //редактирование
     @Override
-    public void editName(Scanner in) {
+    public Product editName(Scanner in) {
         try {
             for (int i = 0; i < allProducts.size(); i++) {
                 System.out.println(i + 1 + ": " + allProducts.get(i).getName());
@@ -184,9 +194,9 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
                     throw new Exception();
                 } else {
                     Product newP;
-                    if (allProducts.get(i).getClass().equals(TypesOfProducts.WASHINGMASHINE.getClaass())){
+                    if (allProducts.get(i).getClass().equals(TypesOfProducts.WASHINGMASHINE.getClaass())) {
                         newP = new WashingMashine(name, allProducts.get(i).getWeight(), allProducts.get(i).getPrice(), ((WashingMashine) allProducts.get(i)).isIfDryer());
-                    } else if (allProducts.get(i).getClass().equals(TypesOfProducts.CHIPSES.getClaass())){
+                    } else if (allProducts.get(i).getClass().equals(TypesOfProducts.CHIPSES.getClaass())) {
                         newP = new Chips(name, allProducts.get(i).getWeight(), allProducts.get(i).getPrice(), ((Chips) allProducts.get(i)).getTaste());
                     } else {
                         newP = new Product(name, allProducts.get(i).getWeight(), allProducts.get(i).getPrice());
@@ -195,15 +205,17 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
                     allProducts.add(newP);
                     //parseJSON.editProductToJson(pathProducts, allProducts);
                     System.out.println("Новый товар:\n" + newP);
+                    return newP;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
-    public void editPrice(Scanner in) {
+    public Product editPrice(Scanner in) {
         for (int i = 0; i < allProducts.size(); i++) {
             System.out.println(i + 1 + ": " + allProducts.get(i).getName());
             System.out.println(i + 1 + ": " + allProducts.get(i).getPrice());
@@ -221,16 +233,17 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
                     throw new Exception("неверный ввод, цена не может быть меньше 0");
                 } else {
                     allProducts.get(i).setPrice(price);
-                    System.out.println("Новый товар:\n" + allProducts.get(i));
+                    return allProducts.get(i);
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
+        return null;
     }
 
     @Override
-    public void editWeight(Scanner in) {
+    public Product editWeight(Scanner in) {
         for (int i = 0; i < allProducts.size(); i++) {
             System.out.println(i + 1 + ": " + allProducts.get(i).getName());
             System.out.println(i + 1 + ": " + allProducts.get(i).getWeight());
@@ -248,44 +261,44 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
                     throw new Exception("неверный ввод, вес не может быть меньше 0");
                 } else {
                     allProducts.get(i).setWeight(weight);
-                    System.out.println("Новый товар:\n" + allProducts.get(i));
+                    return allProducts.get(i);
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
+        return null;
     }
 
     //сортировка заказов
-    public void sortingByMinPrice(ArrayList<Order> order, double minPrice) { //больше заданной
+    public List<Order> sortingByMinPrice(ArrayList<Order> order, double minPrice) { //больше заданной
         System.out.println("-------------------БОЛЬШЕ-МИН-ЦЕНЫ-" + minPrice + "----------------");
-        order.stream()
+        return order.stream()
                 .filter(ord -> (ord.getSumPrice() > minPrice))
-                .forEach(System.out::println);
+                .collect(Collectors.toList());
     }
 
-    public void sortingByMaxPrice(ArrayList<Order> order, double maxPrice) { //меньше заданной
+    public List<Order> sortingByMaxPrice(ArrayList<Order> order, double maxPrice) { //меньше заданной
         System.out.println("-------------------МЕНЬШЕ-МАКС-ЦЕНЫ-" + maxPrice + "-------------------");
-        order.stream()
+        return order.stream()
                 .filter(ord -> (ord.getSumPrice() < maxPrice))
-                .forEach(System.out::println);
+                .collect(Collectors.toList());
     }
 
-    public void sortingByWeight(ArrayList<Order> order) {
+    public List<Order> sortingByWeight(ArrayList<Order> order) {
         System.out.println("--------------------SORTING-BY-WEIGHT---------------");
-        order.stream()
+        return order.stream()
                 .sorted(Comparator.comparingDouble(Order::getSumWeight))
-                .forEach(System.out::println);
+                .collect(Collectors.toList());
     }
 
-    public void sortingByDate(ArrayList<Order> order, Date date) {
+    public List<Order> sortingByDate(ArrayList<Order> order, Date date) {
         System.out.println("--------------------SORTING-BY-DATE---------------");
-        order.stream()
+        return order.stream()
                 .sorted(Comparator.comparing(Order::getDelivering))
                 .filter(ord -> (ord.getDelivering().compareTo(date) <= 0))
-                .forEach(System.out::println);
+                .collect(Collectors.toList());
     }
-
 
     //вспомогательные
     public Product getOptimProductByPrice(List<? extends Product> products) {
@@ -333,6 +346,10 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
 
     public ArrayList<Product> getAllProducts() {
         return allProducts;
+    }
+
+    public ArrayList<Order> getOrders() {
+        return orders;
     }
 }
 

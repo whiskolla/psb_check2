@@ -21,10 +21,6 @@ public class Product {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setPrice(double price) {
         this.price = price;
     }
@@ -38,5 +34,18 @@ public class Product {
         return "\nНазвание = " + name +
                 ";\n вес = " + weight +
                 ";\n цена = " + price;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Product product = (Product) obj;
+        return Double.compare(product.weight, weight) == 0 &&
+                Double.compare(product.price, price) == 0 &&
+                name.equals(product.name);
     }
 }

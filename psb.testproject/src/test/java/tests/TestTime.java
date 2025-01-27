@@ -1,5 +1,6 @@
 package tests;
 
+import org.junit.Assert;
 import org.junit.Test;
 import psb.testproject.timer.ITimer;
 import psb.testproject.timer.Timer;
@@ -20,13 +21,12 @@ public class TestTime {
                     e.printStackTrace();
                 }
             }
-            System.out.println("stop");
         });
         thread.run();
         timer.stop(new ITimer() {
             @Override
             public void time(long time) {
-                System.out.println("Прошло " + TimeUnit.MILLISECONDS.toSeconds(time) + " секунд");
+                Assert.assertEquals(TimeUnit.MILLISECONDS.toSeconds(time), 5);
             }
         });
     }

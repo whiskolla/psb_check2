@@ -22,15 +22,13 @@ public class Main {
             switch (menu) {
                 case (1):
                     pr.printOrderWithSumWeightAndPrice();
-                    logger.logInfo("ВСЕ ОК");
+                    logger.logInfo("товары выведены");
                     break;
                 case (2):
                     pr.createOptimOrder();
-                    logger.logInfo("ВСЕ ОК");
                     break;
                 case (3):
                     pr.getOptimOrder();
-                    logger.logInfo("ВСЕ ОК");
                     break;
                 case (4):
                     pr.getMinProductByPrice();
