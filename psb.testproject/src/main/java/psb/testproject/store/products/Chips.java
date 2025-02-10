@@ -30,10 +30,10 @@ public class Chips extends Product {
         if (obj == null || getClass() != obj.getClass()) {
             return false; // Проверяем null и тип объекта
         }
-        Chips product = (Chips) obj; // Приводим объект к типу Product
+        Chips product = (Chips) obj;
         return Double.compare(product.weight, weight) == 0 &&
                 Double.compare(product.price, price) == 0 &&
                 taste.equals(product.taste) &&
-                name.equals(product.name); // Сравниваем поля
+                name.equals(product.name);
     }
 }

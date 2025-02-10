@@ -74,8 +74,10 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
     public ArrayList<Product> getMinProductByPrice() {
         ArrayList<Product> prs = new ArrayList<>();
         Product pr = sortMinPrice(washingMashines);
+        System.out.println("wm: " + pr);
         prs.add(pr);
         pr = sortMinPrice(chipses);
+        System.out.println("ch: " + pr);
         prs.add(pr);
         return prs;
     }
@@ -159,7 +161,7 @@ public class Processor implements IProcessable, IGeneratable, IEditable {
     @Override
     public Order generateOrderByCount(int maxCount) {
         generatedOrder.clear();
-        int count = (int) (Math.random() * (maxCount + 1 - 1) + 1);
+        int count = (int) (Math.random() * (maxCount) + 1);
         System.out.println("count: " + count);
         for (int i = 0; i < count; i++) {
             int num = (int) (Math.random() * (allProducts.size() - 1 + 1) + 0);

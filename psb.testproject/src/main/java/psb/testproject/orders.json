@@ -136,5 +136,42 @@
         }
       }
     ]
-  }
+  },
+  {
+    "delivering": "2025-01-27",
+    "price": 25.0,
+    "weight": 360.0,
+    "products": [
+      {
+        "product": {
+          "price": 15.0,
+          "name": "Стиралка Anno",
+          "weight": 100.0,
+          "extraDetails": {
+            "ifDryer": false
+          }
+        }
+      },
+      {
+        "product": {
+          "price": 7.0,
+          "name": "Стиралка Zegbee",
+          "weight": 180.0,
+          "extraDetails": {
+            "ifDryer": false
+          }
+        }
+      },
+      {
+        "product": {
+          "price": 3.0,
+          "name": "Чипсы Lays",
+          "weight": 80.0,
+          "extraDetails": {
+            "taste": "cheese"
+          }
+        }
+      }
+    ]
+  },
 ]
