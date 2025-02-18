@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static io.restassured.RestAssured.given;
@@ -131,7 +132,9 @@ public class ReqTest {
     @Test
     @Description("Удаление картинки")
     public void deleteJPEG() throws IOException {
-        Files.delete(Paths.get("src/test/java/tests/threadqa.jpg"));
+        String path = "src/test/java/tests/threadqa.jpg";
+        Files.delete(Paths.get(path));
+        Assert.assertFalse(Files.exists(Path.of(path)));
     }
 
     @Test
