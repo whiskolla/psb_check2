@@ -8,162 +8,145 @@ import org.junit.Test;
 import tests.api.at3.SuccessReg;
 import tests.api.at3.UnsuccessReg;
 import tests.api.at3.dtos.UserDTO;
+import tests.api.at3.spec.Specification;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
 
 public class ReqTest {
     String url = "http://85.192.34.140:8080/";
     String jwtToken;
 
-    //post
-    // Обязательные поля login и pass только. Список с играми может отсутсвовать у пользователя при регистрации, их можно добавить потом
     @Test
     @Description("Удачная регистрация нового пользователя")
-    public void successUserRegTest() {
-        String log = "qwww12ew12";
+    public void successSignupTest_201() {
+        Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(201));
+        String log = "qw" + System.currentTimeMillis();
         UserDTO user = new UserDTO(log, "string");
         UserDTO userReg = given()
-                .baseUri(url)
                 .body(user)
                 .when()
                 .contentType(ContentType.JSON)
                 .post("api/signup")
-                .then().statusCode(201).log().all()
+                .then().log().all()
                 .extract().body().jsonPath().getObject("register_data", UserDTO.class);
         Assert.assertEquals(log, userReg.getLogin());
     }
 
     @Test
     @Description("Неспешная регистрация нового пользователя")
-    public void unSuccessUserRegTest() {
+    public void unSuccessSignupTest_400() {
+        Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(400));
         UserDTO user = new UserDTO("qwerty12", "string");
         String mes = "Login already exist";
         UnsuccessReg unsuccessReg = given()
-                .baseUri(url)
                 .body(user)
                 .when()
                 .contentType(ContentType.JSON)
                 .post("api/signup")
-                .then().statusCode(400).log().all()
+                .then().log().all()
                 .extract().body().jsonPath().getObject("info", UnsuccessReg.class);
         Assert.assertEquals(mes, unsuccessReg.getMessage());
     }
 
-    //Получение JWT токена для пользователя
     @Test
     @Description("Удачное получение JWT токена для пользователя")
-    public void successUserLoginTest() {
+    public void successLoginTest_200() {
+        Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(200));
         SuccessReg successReg = given()
-                .baseUri(url)
                 .body("{\"password\": \"string\", \"username\": \"qwe12\"}")
                 .when()
                 .contentType(ContentType.JSON)
                 .post("api/login")
-                .then().statusCode(200).log().all()
-                .body("token", notNullValue())
+                .then().log().all()
                 .extract().body().as(SuccessReg.class);
+        Assert.assertNotNull(successReg.getToken());
         jwtToken = successReg.getToken();
     }
 
     @Test
     @Description("Неуспешное получение JWT токена, пользователь не зарегестрирован")
-    public void unSuccessUserLoginTest() {
+    public void unSuccessLoginTest_401() {
+        Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(401));
         String error = "Unauthorized";
         Response response = given()
-                .baseUri(url)
                 .body("{\"password\": \"string\", \"username\": \"string\"}")
                 .when()
                 .contentType(ContentType.JSON)
                 .post("api/login")
-                .then().statusCode(401).log().all()
-                .body("token", nullValue())
-                .body("error", equalTo(error))
+                .then().log().all()
                 .extract().response();
+        Assert.assertNull(response.body().jsonPath().getJsonObject("token"));
+        Assert.assertEquals(error, response.body().jsonPath().getJsonObject("error"));
     }
 
-    //get
-    //Получение информации о пользователе
     @Test
     @Description("Успешное получение информации о пользователе")
-    public void checkGetUser200() {
-        successUserLoginTest();
+    public void checkGetUser_200() {
+        successLoginTest_200();
+        Specification.installSpecification(Specification.requestSpecAuth(url, jwtToken), Specification.responseSpec(200));
         Response response = given()
-                .baseUri(url)
-                .auth()
-                .oauth2(jwtToken)
-                .contentType(ContentType.JSON)
                 .when()
                 .get("api/user")
-                .then().statusCode(200).log().all()
-                .body("login", equalTo("qwe12"))
-                .body("pass", equalTo("string"))
+                .then().log().all()
                 .extract().response();
+        Assert.assertEquals("qwe12", response.body().jsonPath().getJsonObject("login"));
+        Assert.assertEquals("string", response.body().jsonPath().getJsonObject("pass"));
     }
 
     @Test
     @Description("Неуспешное получение информации, пользователь не зарегестрирован")
-    public void checkGetUser401() {
+    public void checkGetUser_401() {
+        Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(401));
         String error = "Unauthorized";
         UnsuccessReg unsuccessReg = given()
-                .baseUri(url)
                 .when()
-                .contentType(ContentType.JSON)
                 .get("api/user")
-                .then().statusCode(401).log().all()
+                .then().log().all()
                 .extract().as(UnsuccessReg.class);
         Assert.assertEquals(error, unsuccessReg.getError());
     }
 
-    //Скачать картинку с сервера в формате JPEG
     @Test
     @Description("Успешное получение картинки")
-    public void getJPEG() {
-        try {
-            InputStream inputStream = given()
-                    .baseUri(url)
-                    .when()
-                    .contentType("image/jpeg")
-                    .get("api/files/download")
-                    .then().statusCode(200).log().all()
-                    .extract().asInputStream();
-            FileOutputStream outputStream = new FileOutputStream("threadqa.jpeg");
+    public void getJPEG_200() throws IOException {
+        Specification.installSpecification(Specification.requestSpecJPEG(url), Specification.responseSpec(200));
+        Response response = given()
+                .when()
+                .get("api/files/download")
+                .then()
+                .extract().response();
+        Assert.assertNotNull(response.asByteArray());
 
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-
-            //из InputStream в файл
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(response.asByteArray());
+        File outputFile = new File("src/test/java/tests/threadqa.jpg");
+        ImageIO.write(ImageIO.read(byteArrayInputStream), "jpg", outputFile);
     }
 
     @Test
     @Description("неуспешное получение картинки, пользователь не авторизован")
-    public void getJPEG401() {
+    public void getJPEG_401() {
+        Specification.installSpecification(Specification.requestSpecJPEG(url), Specification.responseSpec(401));
         Response response = given()
-                .baseUri(url)
                 .when()
-                .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer invalid-authorization-header")
                 .get("api/files/download")
-                .then().log().all().statusCode(401)
+                .then().log().all()
                 .extract().response();
     }
+
     @Test
     @Description("неуспешное получение картинки, изображение не найдено")
-    public void getJPEG404() {
+    public void getJPEG_404() {
+        Specification.installSpecification(Specification.requestSpecJPEG(url), Specification.responseSpec(404));
         String error = "Not Found";
         UnsuccessReg unsuccessReg = given()
-                .baseUri(url)
                 .when()
                 .get("api/files/downloa")
-                .then().statusCode(404).log().all()
+                .then().log().all()
                 .extract().as(UnsuccessReg.class);
         Assert.assertEquals(error, unsuccessReg.getError());
     }

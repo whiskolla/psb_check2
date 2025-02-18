@@ -26,7 +26,7 @@ public class Specification {
     public static RequestSpecification requestSpecJPEG(String url) {
         return new RequestSpecBuilder()
                 .setBaseUri(url)
-                .setContentType("image/jpeg")
+                .setContentType("application/octet-stream")
                 .build();
     }
 
