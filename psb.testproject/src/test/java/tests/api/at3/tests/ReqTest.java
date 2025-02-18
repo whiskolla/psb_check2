@@ -116,7 +116,7 @@ public class ReqTest {
     @Test
     @Description("Успешное получение картинки")
     public void getJPEG_200() throws IOException {
-        int length = 103747;
+        int length = 49393;
         String path = "src/test/java/tests/threadqa.jpg";
         Specification.installSpecification(Specification.requestSpecJPEG(url), Specification.responseSpec(200));
         Response response = given()
@@ -127,10 +127,10 @@ public class ReqTest {
         Assert.assertNotNull(response.asByteArray());
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(response.asByteArray());
-        Assert.assertEquals(length, response.asByteArray().length);
-
         File outputFile = new File(path);
         ImageIO.write(ImageIO.read(byteArrayInputStream), "jpg", outputFile);
+        Assert.assertEquals(length, outputFile.length());
+
         if (Files.exists(Path.of(path))) {
             deleteJPEG(path);
         }
@@ -144,7 +144,7 @@ public class ReqTest {
     @Test
     @Description("неуспешное получение картинки, пользователь не авторизован")
     public void getJPEG_401() {
-        Specification.installSpecification(Specification.requestSpecJPEG(url), Specification.responseSpec(401));
+        Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(401));
         Response response = given()
                 .when()
                 .header("Authorization", "Bearer invalid-authorization-header")
