@@ -129,7 +129,7 @@ public class ReqTest {
     }
 
     @Test
-    @Description("Удаление фото")
+    @Description("Удаление картинки")
     public void deleteJPEG() throws IOException {
         Files.delete(Paths.get("src/test/java/tests/threadqa.jpg"));
     }

@@ -7,6 +7,8 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
+import static io.restassured.RestAssured.oauth2;
+
 public class Specification {
     public static RequestSpecification requestSpec(String url) {
         return new RequestSpecBuilder()
@@ -18,7 +20,8 @@ public class Specification {
     public static RequestSpecification requestSpecAuth(String url, String token) {
         return new RequestSpecBuilder()
                 .setBaseUri(url)
-                .addHeader("Authorization", "Bearer " + token)
+                .setAuth(oauth2(token))
+                //.addHeader("Authorization", "Bearer " + token)
                 .setContentType(ContentType.JSON)
                 .build();
     }
