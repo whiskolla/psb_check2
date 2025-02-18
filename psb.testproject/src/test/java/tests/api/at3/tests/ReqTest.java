@@ -13,6 +13,8 @@ import tests.api.at3.spec.Specification;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static io.restassured.RestAssured.given;
 
@@ -124,6 +126,12 @@ public class ReqTest {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(response.asByteArray());
         File outputFile = new File("src/test/java/tests/threadqa.jpg");
         ImageIO.write(ImageIO.read(byteArrayInputStream), "jpg", outputFile);
+    }
+
+    @Test
+    @Description("Удаление фото")
+    public void deleteJPEG() throws IOException {
+        Files.delete(Paths.get("src/test/java/tests/threadqa.jpg"));
     }
 
     @Test
