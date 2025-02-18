@@ -1,4 +1,4 @@
-package tests.api.at3;
+package tests.api.at3.dtos;
 
 public class SuccessReg {
     private String token;

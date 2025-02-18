@@ -1,17 +1,15 @@
 package tests.api.at3.tests;
 
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import jdk.jfr.Description;
 import org.junit.Assert;
 import org.junit.Test;
-import tests.api.at3.SuccessReg;
-import tests.api.at3.UnsuccessReg;
+import tests.api.at3.dtos.SuccessReg;
+import tests.api.at3.dtos.UnsuccessReg;
 import tests.api.at3.dtos.UserDTO;
 import tests.api.at3.spec.Specification;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,17 +20,18 @@ import static io.restassured.RestAssured.given;
 public class ReqTest {
     String url = "http://85.192.34.140:8080/";
     String jwtToken;
+    String pass = "string";
+    String log;
 
     @Test
     @Description("Удачная регистрация нового пользователя")
-    public void successSignupTest_201() {
+    public void successSignUpTest_201() {
         Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(201));
-        String log = "qw" + System.currentTimeMillis();
-        UserDTO user = new UserDTO(log, "string");
+        log = "qw" + System.currentTimeMillis();
+        UserDTO user = new UserDTO(log, pass);
         UserDTO userReg = given()
                 .body(user)
                 .when()
-                .contentType(ContentType.JSON)
                 .post("api/signup")
                 .then().log().all()
                 .extract().body().jsonPath().getObject("register_data", UserDTO.class);
@@ -41,14 +40,14 @@ public class ReqTest {
 
     @Test
     @Description("Неспешная регистрация нового пользователя")
-    public void unSuccessSignupTest_400() {
+    public void unSuccessSignUpTest_400() {
+        successSignUpTest_201();
         Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(400));
-        UserDTO user = new UserDTO("qwerty12", "string");
+        UserDTO user = new UserDTO(log, pass);
         String mes = "Login already exist";
         UnsuccessReg unsuccessReg = given()
                 .body(user)
                 .when()
-                .contentType(ContentType.JSON)
                 .post("api/signup")
                 .then().log().all()
                 .extract().body().jsonPath().getObject("info", UnsuccessReg.class);
@@ -58,11 +57,12 @@ public class ReqTest {
     @Test
     @Description("Удачное получение JWT токена для пользователя")
     public void successLoginTest_200() {
+        successSignUpTest_201();
+        String user = "{\"password\": \"" + pass + "\", \"username\": \"" + log + "\"}";
         Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(200));
         SuccessReg successReg = given()
-                .body("{\"password\": \"string\", \"username\": \"qwe12\"}")
+                .body(user)
                 .when()
-                .contentType(ContentType.JSON)
                 .post("api/login")
                 .then().log().all()
                 .extract().body().as(SuccessReg.class);
@@ -75,10 +75,10 @@ public class ReqTest {
     public void unSuccessLoginTest_401() {
         Specification.installSpecification(Specification.requestSpec(url), Specification.responseSpec(401));
         String error = "Unauthorized";
+        String unauthorizedUser = "{\"password\": \"string\", \"username\": \"string\"}";
         Response response = given()
-                .body("{\"password\": \"string\", \"username\": \"string\"}")
+                .body(unauthorizedUser)
                 .when()
-                .contentType(ContentType.JSON)
                 .post("api/login")
                 .then().log().all()
                 .extract().response();
@@ -96,8 +96,8 @@ public class ReqTest {
                 .get("api/user")
                 .then().log().all()
                 .extract().response();
-        Assert.assertEquals("qwe12", response.body().jsonPath().getJsonObject("login"));
-        Assert.assertEquals("string", response.body().jsonPath().getJsonObject("pass"));
+        Assert.assertEquals(log, response.body().jsonPath().getJsonObject("login"));
+        Assert.assertEquals(pass, response.body().jsonPath().getJsonObject("pass"));
     }
 
     @Test
@@ -116,6 +116,8 @@ public class ReqTest {
     @Test
     @Description("Успешное получение картинки")
     public void getJPEG_200() throws IOException {
+        int length = 103747;
+        String path = "src/test/java/tests/threadqa.jpg";
         Specification.installSpecification(Specification.requestSpecJPEG(url), Specification.responseSpec(200));
         Response response = given()
                 .when()
@@ -125,14 +127,16 @@ public class ReqTest {
         Assert.assertNotNull(response.asByteArray());
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(response.asByteArray());
-        File outputFile = new File("src/test/java/tests/threadqa.jpg");
+        Assert.assertEquals(length, response.asByteArray().length);
+
+        File outputFile = new File(path);
         ImageIO.write(ImageIO.read(byteArrayInputStream), "jpg", outputFile);
+        if (Files.exists(Path.of(path))) {
+            deleteJPEG(path);
+        }
     }
 
-    @Test
-    @Description("Удаление картинки")
-    public void deleteJPEG() throws IOException {
-        String path = "src/test/java/tests/threadqa.jpg";
+    public void deleteJPEG(String path) throws IOException {
         Files.delete(Paths.get(path));
         Assert.assertFalse(Files.exists(Path.of(path)));
     }
