@@ -22,6 +22,10 @@ public class ReqTest {
     String jwtToken;
     String pass = "string";
     String log;
+    String endPointCreate = "api/signup";
+    String endPointGetToken = "api/login";
+    String endPointGetUser = "api/user";
+    String endPointGetImage = "api/files/download";
 
     @Test
     @Description("Удачная регистрация нового пользователя")
@@ -32,7 +36,7 @@ public class ReqTest {
         UserDTO userReg = given()
                 .body(user)
                 .when()
-                .post("api/signup")
+                .post(endPointCreate)
                 .then().log().all()
                 .extract().body().jsonPath().getObject("register_data", UserDTO.class);
         Assert.assertEquals(log, userReg.getLogin());
@@ -48,7 +52,7 @@ public class ReqTest {
         UnsuccessReg unsuccessReg = given()
                 .body(user)
                 .when()
-                .post("api/signup")
+                .post(endPointCreate)
                 .then().log().all()
                 .extract().body().jsonPath().getObject("info", UnsuccessReg.class);
         Assert.assertEquals(mes, unsuccessReg.getMessage());
@@ -63,7 +67,7 @@ public class ReqTest {
         SuccessReg successReg = given()
                 .body(user)
                 .when()
-                .post("api/login")
+                .post(endPointGetToken)
                 .then().log().all()
                 .extract().body().as(SuccessReg.class);
         Assert.assertNotNull(successReg.getToken());
@@ -79,7 +83,7 @@ public class ReqTest {
         Response response = given()
                 .body(unauthorizedUser)
                 .when()
-                .post("api/login")
+                .post(endPointGetToken)
                 .then().log().all()
                 .extract().response();
         Assert.assertNull(response.body().jsonPath().getJsonObject("token"));
@@ -93,7 +97,7 @@ public class ReqTest {
         Specification.installSpecification(Specification.requestSpecAuth(url, jwtToken), Specification.responseSpec(200));
         Response response = given()
                 .when()
-                .get("api/user")
+                .get(endPointGetUser)
                 .then().log().all()
                 .extract().response();
         Assert.assertEquals(log, response.body().jsonPath().getJsonObject("login"));
@@ -107,7 +111,7 @@ public class ReqTest {
         String error = "Unauthorized";
         UnsuccessReg unsuccessReg = given()
                 .when()
-                .get("api/user")
+                .get(endPointGetUser)
                 .then().log().all()
                 .extract().as(UnsuccessReg.class);
         Assert.assertEquals(error, unsuccessReg.getError());
@@ -121,7 +125,7 @@ public class ReqTest {
         Specification.installSpecification(Specification.requestSpecJPEG(url), Specification.responseSpec(200));
         Response response = given()
                 .when()
-                .get("api/files/download")
+                .get(endPointGetImage)
                 .then()
                 .extract().response();
         Assert.assertNotNull(response.asByteArray());
@@ -148,7 +152,7 @@ public class ReqTest {
         Response response = given()
                 .when()
                 .header("Authorization", "Bearer invalid-authorization-header")
-                .get("api/files/download")
+                .get(endPointGetImage)
                 .then().log().all()
                 .extract().response();
     }
@@ -160,7 +164,7 @@ public class ReqTest {
         String error = "Not Found";
         UnsuccessReg unsuccessReg = given()
                 .when()
-                .get("api/files/downloa")
+                .get(endPointGetImage + "1")
                 .then().log().all()
                 .extract().as(UnsuccessReg.class);
         Assert.assertEquals(error, unsuccessReg.getError());
